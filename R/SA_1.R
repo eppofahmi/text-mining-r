@@ -1,4 +1,4 @@
-# Sentiment analysis using ML to do SA
+# Sentiment analysis using ML
 # source: https://datascienceplus.com/sentiment-analysis-with-machine-learning-in-r/
 
 library(RTextTools)
@@ -81,9 +81,7 @@ cross_validate(container, N, "SVM")
 cross_validate(container, N, "RF")
 
 # Sentiment analysis for tweets ----
-###################
-"load data"
-###################
+# "load data"
 setwd("/Volumes/mydata/RStudio/sentiment_analysis/data")
 happy = readLines("./happy.txt")
 sad = readLines("./sad.txt")
@@ -93,9 +91,11 @@ sad_test = readLines("./sad_test.txt")
 tweet = c(happy, sad)
 tweet_test= c(happy_test, sad_test)
 tweet_all = c(tweet, tweet_test)
+
 sentiment = c(rep("happy", length(happy) ), rep("sad", length(sad)))
 sentiment_test = c(rep("happy", length(happy_test) ), rep("sad", length(sad_test)))
 sentiment_all = as.factor(c(sentiment, sentiment_test))
+
 
 # try naive bayes ----
 mat= create_matrix(tweet_all, language="english", 

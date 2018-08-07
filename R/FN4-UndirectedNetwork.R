@@ -20,5 +20,5 @@ nodes_df <- data.frame(ID = c(1:vcount(gD)), NAME = V(gD)$name)
 edges_df <- as.data.frame(get.edges(gD, c(1:ecount(gD))))
 write.gexf(nodes = nodes_df, edges = edges_df, 
            defaultedgetype = "undirected", 
-           output = "/Volumes/mydata/RStudio/sentiment_analysis/Data/graphOutput.gexf")
+           output = "/Volumes/mydata/RStudio/sentiment_analysis/Data/undirected_net.gexf")
 

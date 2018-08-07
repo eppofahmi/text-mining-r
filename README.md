@@ -1,2 +1,2 @@
-# sentiment_analysis
-Text mining using R
+# Text Mining
+Covering processes of text mining using R

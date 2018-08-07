@@ -1,2 +1,2 @@
 # sentiment_analysis
-social media sentiment analysis
+Text mining using R

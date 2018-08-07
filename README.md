@@ -6,5 +6,6 @@
 5. fungsi untuk mendapatkan tf-idf
 6. fungsi untuk topic modelling
 7. fungsi untuk semantic network
+8. stopwords bahasa indonesia diambil dari https://github.com/masdevid/ID-Stopwords
 
 Fungsi digunakan pada data dari Twitter yang diambil dengan API

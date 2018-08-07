@@ -1,5 +1,4 @@
-# skrip ini digunakan untuk melakukan cleaning text dari twitter dengan menggunakan beberapa package
-# tujuannya adalah mendapatkan teks yang sudah bersih dari:
+# skrip ini digunakan untuk melakukan cleaning text dari twitter dengan menggunakan beberapa package. Tujuannya adalah mendapatkan teks yang sudah bersih dari:
 # 1. URL umum dan twitter
 # 2. non ascci character
 # 3. emoji
@@ -21,6 +20,7 @@ library(qdap)
 library(textclean)
 library(tidytext)
 
+# Cleaning function ----
 tweet_cleaner <- function(data, # data frame
                           column) # column number
   {
@@ -42,15 +42,12 @@ tweet_cleaner <- function(data, # data frame
   data <- gsub("(2[[:alpha:]]*)", "", data) # replace 2aA-zZ
   # reduce repeated (3 times) chr in word
   data <- gsub("([[:alpha:]])\\1{2,}", "\\1", data)
-  
   # normalisation
   kt_normal <- read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/sentiment_analysis/master/Data/kata3karakter.csv"), header=T, sep = ";", stringsAsFactors = FALSE)
   kt_normal$from <- paste0("\\b", kt_normal$from, "\\b") # excact macth
-  
   pattern1 <- as.character(kt_normal$from)
   replacement1 <- as.character(kt_normal$to)
   data <- mgsub_regex(data, pattern = pattern1, replacement = replacement1, fixed = FALSE)
-  
   # stopwords bahasa indonesia
   stopwords_id <- read.delim(text=getURL("https://raw.githubusercontent.com/eppofahmi/ID-Stopwords/master/id.stopwords.02.01.2016.txt"), header=F)
   stopwords_id$to <- ""
@@ -58,7 +55,6 @@ tweet_cleaner <- function(data, # data frame
   pattern2 <- as.character(stopwords_id$V1)
   replacement2 <- as.character(stopwords_id$to)
   data <- mgsub_regex(data, pattern = pattern2, replacement = replacement2, fixed = FALSE)
-  
   # stopword twitter
   kt_delete <- read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/sentiment_analysis/master/Data/katatobedeleted.csv"), header=T, sep = ";", stringsAsFactors = FALSE)
   colnames(kt_delete) <- c("from", "to")
@@ -66,21 +62,17 @@ tweet_cleaner <- function(data, # data frame
   pattern3 <- as.character(kt_delete$from)
   replacement3 <- as.character(kt_delete$to)
   data <- mgsub_regex(data, pattern = pattern3, replacement = replacement3, fixed = FALSE)
-  
   data <- gsub("\\bxyz\\b", '', data)
-  
-  # replace single chr ----
+  # replace single chr
   data <- gsub("\\W*\\b\\w\\b\\W*", " ", data)
-  
   # replace white space
   data <- replace_white(data)
   data <- gsub("^[[:space:]]+", "", data)
   data <- gsub("[[:space:]]+$", "", data)
   
   print("your data is clean!!!")
-  return(data_frame(data))
+  return(data_frame(clean_text = data))
 }
-
 
 # tesss -----
 data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
@@ -88,6 +80,4 @@ data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/b
 data_tweet <- data_tweet %>%
   filter(isRetweet == FALSE) 
 
-a_test <- tweet_cleaner(data = data_tweet, column = 2)
-
-glimpse(a_test)
+clean_text <- tweet_cleaner(data = data_tweet, column = 2)

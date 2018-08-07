@@ -1,3 +1,9 @@
+# Undirected netwrok
+# undirected network berasal dari seluruh akun yang ada dalam twit, yaitu baik akun dari kolom screen name (sender), maupun dalam text (user_inv)
+
+library(tidyverse)
+library(tidytext)
+
 # undirected network ----
 data_net <- wrangled %>%
   filter(user_count >=2) %>%

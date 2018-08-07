@@ -19,12 +19,15 @@ data_net$V2 <- paste0("@", data_net$V2)
 library(igraph)
 library(rgexf)
 
-gD <- simplify(graph.data.frame(data_net, directed=FALSE))
+u_net <- simplify(graph.data.frame(data_net, directed=FALSE))
+
 # Create a dataframe nodes: 1st column - node ID, 2nd column -node name
-nodes_df <- data.frame(ID = c(1:vcount(gD)), NAME = V(gD)$name)
+nodes_df <- data.frame(ID = c(1:vcount(u_net)), NAME = V(u_net)$name)
+
 # Create a dataframe edges: 1st column - source node ID, 2nd column -target node ID
-edges_df <- as.data.frame(get.edges(gD, c(1:ecount(gD))))
+edges_df <- as.data.frame(get.edges(u_net, c(1:ecount(u_net))))
+
+# saving file to visualise in gephi
 write.gexf(nodes = nodes_df, edges = edges_df, 
            defaultedgetype = "undirected", 
            output = "/Volumes/mydata/RStudio/sentiment_analysis/Data/undirected_net.gexf")
-

@@ -43,7 +43,8 @@ tweet_cleaner <- function(data, # data frame
   # reduce repeated (3 times) chr in word
   data <- gsub("([[:alpha:]])\\1{2,}", "\\1", data)
   # normalisation
-  kt_normal <- read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/sentiment_analysis/master/Data/kata3karakter.csv"), header=T, sep = ";", stringsAsFactors = FALSE)
+  kt_normal <- read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/sentiment_analysis/master/Data/kata3karakter.csv"), 
+                        header=T, sep = ";", stringsAsFactors = FALSE)
   kt_normal$from <- paste0("\\b", kt_normal$from, "\\b") # excact macth
   pattern1 <- as.character(kt_normal$from)
   replacement1 <- as.character(kt_normal$to)
@@ -63,6 +64,15 @@ tweet_cleaner <- function(data, # data frame
   replacement3 <- as.character(kt_delete$to)
   data <- mgsub_regex(data, pattern = pattern3, replacement = replacement3, fixed = FALSE)
   data <- gsub("\\bxyz\\b", '', data)
+  # stopwords bahasa inggris
+  stopwords_en <- stop_words
+  stopwords_en <- stopwords_en %>%
+    select(V1 = word)
+  stopwords_en$to <- ""
+  stopwords_en$V1 <- paste0("\\b", stopwords_en$V1, "\\b") # excact macth
+  pattern4 <- as.character(stopwords_en$V1)
+  replacement4 <- as.character(stopwords_en$to)
+  data <- mgsub_regex(data, pattern = pattern4, replacement = replacement4, fixed = FALSE)
   # replace single chr
   data <- gsub("\\W*\\b\\w\\b\\W*", " ", data)
   # replace white space
@@ -75,13 +85,13 @@ tweet_cleaner <- function(data, # data frame
 }
 
 # tesss -----
-data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
-
-data_tweet <- data_tweet %>%
-  filter(isRetweet == FALSE)%>%
-  select(2)
-
-glimpse(data_tweet)
-class(data_tweet)
-
-clean_text <- tweet_cleaner(data = data_tweet, column = 2)
+# data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
+# 
+# data_tweet <- data_tweet %>%
+#   filter(isRetweet == FALSE)%>%
+#   select(2)
+# 
+# glimpse(data_tweet)
+# class(data_tweet)
+# 
+# clean_text <- tweet_cleaner(data = data_tweet, column = 1)

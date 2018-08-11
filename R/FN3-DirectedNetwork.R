@@ -9,18 +9,29 @@ directed_net <- wrangled %>%
   select(1,2) %>%
   unnest_tokens(user, user_inv, token = "words", to_lower = FALSE)
 
-View(directed_net)
+directed_net1 <- directed_net %>%
+  unite(net, sep = " ", remove = TRUE) %>%
+  group_by(net) %>%
+  count(net, sort = TRUE) %>%
+  filter(n >= 15)
 
-colnames(directed_net) <- c("V1", "V2")
+#View(directed_net)
+
+directed_net1 <- directed_net1 %>%
+  separate(net, into = c("V1", "V2"), sep = " ")
+
+colnames(directed_net1) <- c("V1", "V2", "V3")
 
 #directed_net$V1 <- paste0("@", directed_net$V1)
-directed_net$V2 <- paste0("@", directed_net$V2)
+directed_net1$V2 <- paste0("@", directed_net1$V2)
 
 library(igraph)
 library(rgexf)
 
 # create igraph objek
-d_net <- simplify(graph.data.frame(directed_net, directed=TRUE))
+d_net <- simplify(graph_from_data_frame(d = directed_net1, directed = TRUE),
+                  remove.loops = TRUE, remove.multiple = FALSE, 
+                  edge.attr.comb = igraph_opt("edge.attr.comb"))
 
 # Create a dataframe nodes: 1st column - node ID, 2nd column -node name
 nodes_df <- data.frame(ID = c(1:vcount(d_net)), NAME = V(d_net)$name)
@@ -32,3 +43,5 @@ edges_df <- as.data.frame(get.edges(d_net, c(1:ecount(d_net))))
 write.gexf(nodes = nodes_df, edges = edges_df, 
            defaultedgetype = "directed", 
            output = "/Volumes/mydata/RStudio/sentiment_analysis/Data/directed_net.gexf")
+
+write_graph(graph = d_net, file = "/Volumes/mydata/RStudio/sentiment_analysis/Data/tes_net.graphml", format = "graphml")

@@ -33,15 +33,17 @@ d_net <- simplify(graph_from_data_frame(d = directed_net1, directed = TRUE),
                   remove.loops = TRUE, remove.multiple = FALSE, 
                   edge.attr.comb = igraph_opt("edge.attr.comb"))
 
+# save langsung ----
+# Menyiampannya secara langsung dan kolom lain selain 2 pertama dianggap sebagai atribut network
+write_graph(graph = d_net, file = "/Volumes/mydata/RStudio/sentiment_analysis/Data/tes_net.graphml", format = "graphml")
+
 # Create a dataframe nodes: 1st column - node ID, 2nd column -node name
 nodes_df <- data.frame(ID = c(1:vcount(d_net)), NAME = V(d_net)$name)
 
 # Create a dataframe edges: 1st column - source node ID, 2nd column -target node ID
 edges_df <- as.data.frame(get.edges(d_net, c(1:ecount(d_net))))
 
-# save 
+# save
 write.gexf(nodes = nodes_df, edges = edges_df, 
            defaultedgetype = "directed", 
            output = "/Volumes/mydata/RStudio/sentiment_analysis/Data/directed_net.gexf")
-
-write_graph(graph = d_net, file = "/Volumes/mydata/RStudio/sentiment_analysis/Data/tes_net.graphml", format = "graphml")

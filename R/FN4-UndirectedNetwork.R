@@ -20,6 +20,8 @@ library(igraph)
 library(rgexf)
 
 u_net <- simplify(graph.data.frame(data_net, directed=FALSE))
+# ini bisa langsung disimpan sebagai .graphml namun pada saat memvisualisasikannya di gephi perlu ada beberapa penyesuaian, karena selain dua kolom pertama dianggap sebagai edges atribut
+
 
 # Create a dataframe nodes: 1st column - node ID, 2nd column -node name
 nodes_df <- data.frame(ID = c(1:vcount(u_net)), NAME = V(u_net)$name)

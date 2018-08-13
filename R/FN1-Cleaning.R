@@ -87,11 +87,5 @@ tweet_cleaner <- function(data, # data frame
 # tesss -----
 data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
 
-data_tweet <- data_tweet %>%
-  filter(isRetweet == FALSE)%>%
-  select(2)
-
-glimpse(data_tweet)
-class(data_tweet)
-
-clean_text <- tweet_cleaner(data = data_tweet, column = 1)
+clean_text <- tweet_cleaner(data = data_tweet, column = 2)
+clean_text$ori <- data_tweet$text

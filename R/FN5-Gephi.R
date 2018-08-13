@@ -1,3 +1,5 @@
+# Data diambil dari network analisis yang dilakukan di gephi.
+
 library(tidygraph)
 library(networkD3)
 

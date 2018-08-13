@@ -1,7 +1,12 @@
 # Skrip ini digunakan untuk:
 # 1. extract username dari column text
 # 2. extract hashtag dari column text
-# 3. user_all = gabungan username dari dalam text + user pengirim
+# 3. user_all = gabungan username dari dalam text (user_inv)+ user pengirim (sender)
+
+library(tidyverse)
+library(qdap)
+library(textclean)
+library(tidytext)
 
 # fungsi ----
 tweet_wrangler <- function(data, # data frame
@@ -21,6 +26,13 @@ tweet_wrangler <- function(data, # data frame
   # user_all
   user_all <- bind_cols(user_send, user_inv)
   user_all <- unite(data = user_all, col = user_all, sep = ", ", remove = TRUE)
+  
+  # removing punctuation between user
+  user_all$user_all <- gsub("[^[:alnum:][:space:]@_]", "", user_all$user_all)
+  # removing white space at the start and at the end of string
+  user_all$user_all <- gsub("^[[:space:]]+", "", user_all$user_all)
+  user_all$user_all <- gsub("[[:space:]]+$", "", user_all$user_all)
+  # user count
   user_all$user_count <- sapply(user_all$user_all, function(x) 
     length(unlist(strsplit(as.character(x), "\\S+"))))
   
@@ -34,4 +46,7 @@ tweet_wrangler <- function(data, # data frame
 }
 
 # tesss ----
-wrangled <- tweet_wrangler(data = data_tweet, column1 = 2, column2 = 12)
+
+data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
+
+tweet_user <- tweet_wrangler(data = data_tweet, column1 = 2, column2 = 12)

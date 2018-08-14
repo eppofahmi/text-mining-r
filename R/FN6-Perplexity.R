@@ -29,6 +29,7 @@ tm_perplexity <- function(input_text, # should be a columm from a dataframe
     dyn.load(libjvm)
   }
   
+  library(RWeka)
   # function for creating bigram in the DTM
   BigramTokenizer <- function(x) NGramTokenizer(x, Weka_control(min = min_words, max = max_words))
   DTM <- DocumentTermMatrix(Corpus, control=list(tokenize=BigramTokenizer))
@@ -57,11 +58,11 @@ tm_perplexity <- function(input_text, # should be a columm from a dataframe
 }
 
 # tes perplex ----
-test_perplex <- tm_perplexity(clean_text$clean_text, 
-                         number_of_topics = 4,
-                         min_words = 2,
-                         max_words = 2, 
-                         min_k = 5, 
-                         max_k = 20, 
-                         multi = 5)
-test_perplex
+# test_perplex <- tm_perplexity(clean_text$clean_text, 
+#                          number_of_topics = 4,
+#                          min_words = 2,
+#                          max_words = 2, 
+#                          min_k = 5, 
+#                          max_k = 20, 
+#                          multi = 5)
+# test_perplex

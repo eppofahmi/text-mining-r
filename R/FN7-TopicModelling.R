@@ -30,11 +30,12 @@ clean_text <- clean_text %>%
   filter(word_count >= 2)
 
 # Fungsi ---- 
-# the LDA function using topicmodels package
+
 bigram_tm <- function(input_text, # should be a columm from a dataframe
                       plot = T, # return a plot? TRUE by defult
                       min_words = 2, # minmum token n = 2 by default
                       max_words = 2, # minmum token n = 2 by default
+                      topic_term = 10, # term per topic
                       number_of_topics = 4) # number of topics (4 by default)
 {    
   # create a corpus (type of object expected by tm) and document term matrix
@@ -45,7 +46,7 @@ bigram_tm <- function(input_text, # should be a columm from a dataframe
     message (paste0('Load libjvm.dylib from: ',libjvm))
     dyn.load(libjvm)
   }
-  
+
   # function for creating bigram in the DTM
   BigramTokenizer <- function(x) NGramTokenizer(x, Weka_control(min = min_words, max = max_words))
   DTM <- DocumentTermMatrix(Corpus, control=list(tokenize=BigramTokenizer))
@@ -58,22 +59,21 @@ bigram_tm <- function(input_text, # should be a columm from a dataframe
   topics <- tidy(lda, matrix = "beta")
   
   # get the top ten terms for each topic
-  top_terms <- topics  %>% # take the topics data frame and..
-    group_by(topic) %>% # treat each topic as a different group
-    top_n(10, beta) %>% # get the top 10 most informative words
-    ungroup() %>% # ungroup
-    arrange(topic, -beta) # arrange words in descending informativeness
+  top_terms <- topics  %>% 
+    group_by(topic) %>% 
+    top_n(topic_term, beta) %>% 
+    ungroup() %>% 
+    arrange(topic, -beta)
   
   # if the user asks for a plot (TRUE by default)
   if(plot == T){
-    # plot the top ten terms for each topic in order
-    top_terms %>% # take the top terms
-      mutate(term = reorder(term, beta)) %>% # sort terms by beta value 
-      ggplot(aes(term, beta, fill = factor(topic))) + # plot beta by theme
-      geom_col(show.legend = FALSE) + # as a bar plot
-      facet_wrap(~ topic, scales = "free") + # which each topic in a seperate plot
-      labs(x = NULL, y = "Beta") + # no x label, change y label 
-      coord_flip() # turn bars sideways
+    top_terms %>%
+      mutate(term = reorder(term, beta)) %>% 
+      ggplot(aes(term, beta, fill = factor(topic))) +
+      geom_col(show.legend = FALSE) +
+      facet_wrap(~ topic, scales = "free") +
+      labs(x = NULL, y = "Beta") +
+      coord_flip()
   }else{ 
     # if the user does not request a plot
     # return a list of sorted terms instead
@@ -82,9 +82,10 @@ bigram_tm <- function(input_text, # should be a columm from a dataframe
 }
 
 # tes TM ----
-test_bigram <- bigram_tm(clean_text$clean_text, 
-                         number_of_topics = 5, 
-                         plot = T, 
-                         min_words = 2, 
-                         max_words = 2)
-test_bigram
+# test_bigram <- bigram_tm(clean_text$clean_text, 
+#                          number_of_topics = 5, 
+#                          plot = T, 
+#                          topic_term = 5,
+#                          min_words = 2, 
+#                          max_words = 2)
+# test_bigram

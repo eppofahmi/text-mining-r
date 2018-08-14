@@ -93,6 +93,8 @@ data_tweet <- data_tweet %>%
 clean_text <- tweet_cleaner(data = data_tweet, column = 2)
 clean_text$ori <- data_tweet$text
 
+clean_text$ori <- replace_non_ascii(clean_text$ori)
+
 daftar_kata <- clean_text %>%
   select(clean_text) %>%
   unnest_tokens(daftar, clean_text, token = "words", to_lower = TRUE) %>%

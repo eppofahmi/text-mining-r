@@ -85,17 +85,17 @@ tweet_cleaner <- function(data, # data frame
 }
 
 # tesss -----
-data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
-
-data_tweet <- data_tweet %>%
-  filter(isRetweet == FALSE)
-
-clean_text <- tweet_cleaner(data = data_tweet, column = 2)
-clean_text$ori <- data_tweet$text
-
-clean_text$ori <- replace_non_ascii(clean_text$ori)
-
-daftar_kata <- clean_text %>%
-  select(clean_text) %>%
-  unnest_tokens(daftar, clean_text, token = "words", to_lower = TRUE) %>%
-  count(daftar, sort = TRUE)
+# data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
+# 
+# data_tweet <- data_tweet %>%
+#   filter(isRetweet == FALSE)
+# 
+# clean_text <- tweet_cleaner(data = data_tweet, column = 2)
+# clean_text$ori <- data_tweet$text
+# 
+# clean_text$ori <- replace_non_ascii(clean_text$ori)
+# 
+# daftar_kata <- clean_text %>%
+#   select(clean_text) %>%
+#   unnest_tokens(daftar, clean_text, token = "words", to_lower = TRUE) %>%
+#   count(daftar, sort = TRUE)

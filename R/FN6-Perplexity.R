@@ -42,7 +42,7 @@ tm_perplexity <- function(input_text, # should be a columm from a dataframe
   # preform LDA & get the words/topic in a tidy text format
   ap_lda <- LDA(DTM, k = number_of_topics, control = list(seed = 1234))
   perplexity(ap_lda)
-  n_topics <- seq(from = min_k, to = max_k, by = a3)
+  n_topics <- seq(from = min_k, to = max_k, by = multi)
   ap_lda_compare <- n_topics %>%  
     map(LDA, x = ap_dtm, control = list(seed = 1234))
   perplex <- data_frame(k = n_topics,

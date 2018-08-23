@@ -45,8 +45,7 @@ tweet_wrangler <- function(data, # data frame
   data_all <- bind_cols(user_send, user_inv, user_all, hashtag)
 }
 
-# tesss ----
-
-data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
-
-tweet_user <- tweet_wrangler(data = data_tweet, column1 = 2, column2 = 12)
+# tes ----
+# data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
+# 
+# tweet_user <- tweet_wrangler(data = data_tweet, column1 = 2, column2 = 12)

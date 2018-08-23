@@ -50,9 +50,9 @@ tm_perplexity <- function(input_text, # should be a columm from a dataframe
     ggplot(aes(k, perplex)) +
     geom_point() +
     geom_line() +
-    labs(title = "Mengevaluasi topic model LDA",
-         subtitle = "Titik tertinggi adalah jumlah topik (k) optimal dari dokumen",
-         x = "Jumlah Topik",
+    labs(title = "Evaluating LDA Topic Model",
+         subtitle = "The highest point is the number of optimal (k) topics from the corpus",
+         x = "Numbers of Topics",
          y = "Perplexity")
   perplex
 }

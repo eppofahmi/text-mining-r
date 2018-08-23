@@ -21,11 +21,11 @@ library(textclean)
 library(tidytext)
 
 # Cleaning function ----
-tweet_cleaner <- function(data, # data frame
-                          column) # column number
+tweet_cleaner <- function(data) 
   {
   # taking text column
-  data <- as.character(data[ ,column])
+  data <- as.data.frame(data)
+  data <- as.character(data[ , 1])
   data <- replace_html(data, symbol = FALSE) # r html
   rm_twitter_n_url <- rm_(pattern=pastex("@rm_twitter_url", "@rm_url"))
   data <- rm_twitter_n_url(data, clean = TRUE, trim = TRUE) # r urls
@@ -85,19 +85,15 @@ tweet_cleaner <- function(data, # data frame
 }
 
 # tesss -----
-data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
+clean_text <- tweet_cleaner(twit_data$twit_ori)
 
-data_tweet <- data_tweet %>%
-  filter(isRetweet == FALSE)
-
-clean_text <- tweet_cleaner(data = data_tweet, column = 2)
-clean_text$ori <- data_tweet$text
-
+clean_text$ori <- twit_data$twit_ori
 clean_text$ori <- replace_non_ascii(clean_text$ori)
-
 daftar_kata <- clean_text %>%
   select(clean_text) %>%
   unnest_tokens(daftar, clean_text, token = "words", to_lower = TRUE) %>%
   count(daftar, sort = TRUE)
 
-write_tsv(daftar_kata, path = "/Volumes/mydata/RStudio/text-mining-r/Data/daftarkata.tsv")
+glimpse(twit_data)
+
+#write_tsv(daftar_kata, path = "/Volumes/mydata/RStudio/text-mining-r/Data/daftarkata.tsv")

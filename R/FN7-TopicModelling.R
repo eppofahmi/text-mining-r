@@ -1,4 +1,10 @@
 # skrip ini digunakan untuk melakukan pemodelan topik dan mendapatkan jumlah topik yang optimal berdasarkan perplexity
+# Runing RJava
+if (Sys.info()['sysname'] == 'Darwin') {
+  libjvm <- paste0(system2('/usr/libexec/java_home',stdout = TRUE)[1],'/jre/lib/server/libjvm.dylib')
+  message (paste0('Load libjvm.dylib from: ',libjvm))
+  dyn.load(libjvm)
+}
 
 library(tidyverse) # general utility & workflow functions
 library(tidytext) # tidy implimentation of NLP methods
@@ -30,7 +36,6 @@ clean_text <- clean_text %>%
   filter(word_count >= 2)
 
 # Fungsi ---- 
-
 bigram_tm <- function(input_text, # should be a columm from a dataframe
                       plot = T, # return a plot? TRUE by defult
                       min_words = 2, # minmum token n = 2 by default

@@ -43,5 +43,7 @@ D3_network_LM <- forceNetwork(Links = links_1, Nodes = nodes_1,
              fontSize = 15, 
              zoom = TRUE)
 
+D3_network_LM
+
 # Save as html file ----
 networkD3::saveNetwork(D3_network_LM, "semnet-twit-gojek.html", selfcontained = TRUE)

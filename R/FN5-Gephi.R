@@ -1,6 +1,6 @@
 # Visualisasi network dengan networkD3
 # Data diambil dari network analisis yang dilakukan di gephi.
-
+library(tidyverse)
 library(tidygraph)
 library(networkD3)
 

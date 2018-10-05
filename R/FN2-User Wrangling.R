@@ -13,6 +13,7 @@ tweet_wrangler <- function(data, # data frame
                            column1, # kolom teks
                            column2) # kolom pengirim twit
   {
+  data <- data.frame(data)
   # involved
   user_inv <- as.character(data[ ,column1])
   user_inv <- sapply(str_extract_all(user_inv, "(@[[:alnum:]_]*)", 
@@ -38,7 +39,7 @@ tweet_wrangler <- function(data, # data frame
   
   # hashtag
   hashtag <- as.character(data[ ,column1])
-  hashtag <- sapply(str_extract_all(data_tweet$text, "(#[[:alnum:]_]*)", 
+  hashtag <- sapply(str_extract_all(hashtag, "(#[[:alnum:]_]*)", 
                                     simplify = FALSE), paste, collapse=", ")
   hashtag <- data_frame(hashtag)
   

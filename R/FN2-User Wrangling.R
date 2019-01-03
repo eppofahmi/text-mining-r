@@ -3,16 +3,17 @@
 # 2. extract hashtag dari column text
 # 3. user_all = gabungan username dari dalam text (user_inv)+ user pengirim (sender)
 
-library(tidyverse)
-library(qdap)
-library(textclean)
-library(tidytext)
-
 # fungsi ----
 tweet_wrangler <- function(data, # data frame
                            column1, # kolom teks
                            column2) # kolom pengirim twit
   {
+  # lib
+  library(tidyverse)
+  library(qdap)
+  library(textclean)
+  library(tidytext)
+  
   data <- data.frame(data)
   # involved
   user_inv <- as.character(data[ ,column1])
@@ -48,5 +49,5 @@ tweet_wrangler <- function(data, # data frame
 
 # tes ----
 # data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
-# 
-# tweet_user <- tweet_wrangler(data = data_tweet, column1 = 2, column2 = 12)
+
+# tweet_user <- tweet_wrangler(data = kementerian, column1 = 4, column2 = 3)

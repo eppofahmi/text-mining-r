@@ -13,28 +13,6 @@ library(tm) # general text mining functions, making document term matrixes
 library(SnowballC) # for stemming
 library(RWeka) # create dtm bigram 
 
-# Data ----
-id_tw_gojek <- "1ALZxvnmISCHuRzawaP5K6FjUTN3Wy700"
-twit_gojek <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id_tw_gojek), 
-                       header = TRUE, stringsAsFactors = FALSE, sep = ",")
-
-twit_gojek$tweets <- gsub("\\bgo jek\\b", "gojek", twit_gojek$tweets)
-
-twit_gojek <- twit_gojek %>%
-  filter(is_duplicate == FALSE) %>%
-  filter(word_count >= 2) %>%
-  select(date, tweets)
-
-clean_text <- tweet_cleaner(data = twit_gojek, column = 2)
-clean_text$ori <- twit_gojek$tweets
-clean_text$tanggal <- twit_gojek$date
-
-clean_text$word_count <- sapply(clean_text$clean_text, function(x) 
-  length(unlist(strsplit(as.character(x), "\\S+"))))
-
-clean_text <- clean_text %>%
-  filter(word_count >= 2)
-
 # Fungsi ---- 
 bigram_tm <- function(input_text, # should be a columm from a dataframe
                       plot = T, # return a plot? TRUE by defult
@@ -44,6 +22,13 @@ bigram_tm <- function(input_text, # should be a columm from a dataframe
                       number_of_topics = 4) # number of topics (4 by default)
 {    
   # create a corpus (type of object expected by tm) and document term matrix
+  library(tidyverse) # general utility & workflow functions
+  library(tidytext) # tidy implimentation of NLP methods
+  library(topicmodels) # for LDA topic modelling 
+  library(tm) # general text mining functions, making document term matrixes
+  library(SnowballC) # for stemming
+  library(RWeka) # create dtm bigram
+  
   Corpus <- VCorpus(VectorSource(input_text))
   
   if (Sys.info()['sysname'] == 'Darwin') {
@@ -87,10 +72,35 @@ bigram_tm <- function(input_text, # should be a columm from a dataframe
 }
 
 # tes TM ----
-# test_bigram <- bigram_tm(clean_text$clean_text, 
-#                          number_of_topics = 5, 
-#                          plot = T, 
-#                          topic_term = 5,
-#                          min_words = 2, 
-#                          max_words = 2)
-# test_bigram
+to_kemen_clean <- read_csv("to_kemen_clean.csv", 
+                           col_types = cols(X1 = col_date(format = "%d-%m-%Y"), 
+                                            X4 = col_logical()), trim_ws = FALSE)
+from_kemen_clean <- read_csv("from_kemen_clean.csv", 
+                             col_types = cols(X1 = col_date(format = "%d-%m-%Y")), 
+                             trim_ws = FALSE)
+
+glimpse(from_kemen_clean)
+
+# topic to -----
+topik_to_kemen <- bigram_tm(to_kemen_clean$clean_text,
+                         number_of_topics = 10,
+                         plot = FALSE,
+                         topic_term = 30,
+                         min_words = 2,
+                         max_words = 2)
+topik_to_kemen
+topik_to_kemen$beta <- round(topik_to_kemen$beta, 4)
+
+write_csv(topik_to_kemen, path = "topik_to_kemen.csv")
+
+# topic from -----
+topik_from_kemen <- bigram_tm(from_kemen_clean$clean_text,
+                            number_of_topics = 10,
+                            plot = FALSE,
+                            topic_term = 30,
+                            min_words = 2,
+                            max_words = 2)
+topik_from_kemen
+topik_from_kemen$beta <- round(topik_from_kemen$beta, 4)
+
+write_csv(topik_from_kemen, path = "topik_from_kemen.csv")

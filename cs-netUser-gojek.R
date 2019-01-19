@@ -30,6 +30,7 @@ directed_net1 <- directed_net1 %>%
 directed_net1 <- directed_net1 %>%
   separate(net, into = c("V1", "V2"), sep = " ")
 
+
 colnames(directed_net1) <- c("V1", "V2", "V3")
 
 

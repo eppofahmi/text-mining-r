@@ -14,18 +14,26 @@
 # 14. penghilangan stopwords bahasa indonesia (758 term)
 # 15. strip white space
 
-library(RCurl)
-library(tidyverse)
-library(qdap)
-library(textclean)
-library(tidytext)
-
 # Cleaning function ----
-tweet_cleaner <- function(data, # data frame
-                          column) # column number
+tweet_cleaner <- function(data) 
   {
+  # load java
+  if (Sys.info()['sysname'] == 'Darwin') {
+    libjvm <- paste0(system2('/usr/libexec/java_home',stdout = TRUE)[1],'/jre/lib/server/libjvm.dylib')
+    message (paste0('Load libjvm.dylib from: ',libjvm))
+    dyn.load(libjvm)
+  }
+  # library
+  library(RCurl)
+  library(tidyverse)
+  library(qdap)
+  library(textclean)
+  library(tidytext)
+  library(rJava)
+  
   # taking text column
-  data <- as.character(data[ ,column])
+  data <- as.data.frame(data)
+  data <- as.character(data[ , 1])
   data <- replace_html(data, symbol = FALSE) # r html
   rm_twitter_n_url <- rm_(pattern=pastex("@rm_twitter_url", "@rm_url"))
   data <- rm_twitter_n_url(data, clean = TRUE, trim = TRUE) # r urls
@@ -50,14 +58,16 @@ tweet_cleaner <- function(data, # data frame
   replacement1 <- as.character(kt_normal$to)
   data <- mgsub_regex(data, pattern = pattern1, replacement = replacement1, fixed = FALSE)
   # stopwords bahasa indonesia
-  stopwords_id <- read.delim(text=getURL("https://raw.githubusercontent.com/eppofahmi/ID-Stopwords/master/id.stopwords.02.01.2016.txt"), header=F)
+  stopwords_id <- read.delim(text=getURL("https://raw.githubusercontent.com/eppofahmi/ID-Stopwords/master/id.stopwords.02.01.2016.txt"), 
+                             header=F)
   stopwords_id$to <- ""
   stopwords_id$V1 <- paste0("\\b", stopwords_id$V1, "\\b") # excact macth
   pattern2 <- as.character(stopwords_id$V1)
   replacement2 <- as.character(stopwords_id$to)
   data <- mgsub_regex(data, pattern = pattern2, replacement = replacement2, fixed = FALSE)
   # stopword twitter
-  kt_delete <- read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/sentiment_analysis/master/Data/katatobedeleted.csv"), header=T, sep = ";", stringsAsFactors = FALSE)
+  kt_delete <- read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/sentiment_analysis/master/Data/katatobedeleted.csv"), 
+                        header=T, sep = ";", stringsAsFactors = FALSE)
   colnames(kt_delete) <- c("from", "to")
   kt_delete$from <- paste0("\\b", kt_delete$from, "\\b") # excact macth
   pattern3 <- as.character(kt_delete$from)
@@ -85,13 +95,15 @@ tweet_cleaner <- function(data, # data frame
 }
 
 # tesss -----
-data_tweet <-read.csv(text=getURL("https://raw.githubusercontent.com/eppofahmi/belajaR/master/cdc-workshop/latihan-cdc.csv"), header=T, sep = ",", stringsAsFactors = FALSE)
+# clean_text <- tweet_cleaner(from_kemen_1$X3)
+# 
+# clean_text$ori <- twit_data$twit_ori
+# clean_text$ori <- replace_non_ascii(clean_text$ori)
+# daftar_kata <- clean_text %>%
+#   select(clean_text) %>%
+#   unnest_tokens(daftar, clean_text, token = "words", to_lower = TRUE) %>%
+#   count(daftar, sort = TRUE)
+# 
+# glimpse(twit_data)
 
-data_tweet <- data_tweet %>%
-  filter(isRetweet == FALSE)%>%
-  select(2)
-
-glimpse(data_tweet)
-class(data_tweet)
-
-clean_text <- tweet_cleaner(data = data_tweet, column = 1)
+#write_tsv(daftar_kata, path = "/Volumes/mydata/RStudio/text-mining-r/Data/daftarkata.tsv")

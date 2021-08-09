@@ -2,7 +2,6 @@ library(readr)
 library(data.table)
 library(textclean)
 
-
 netTwit_gojek <- read_csv("Data/netTwit_gojek.csv")
 netTwit_gojek$tweets <- replace_non_ascii(netTwit_gojek$tweets)
 
